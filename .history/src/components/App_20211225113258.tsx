@@ -1,12 +1,12 @@
 import React from "react";
-import Dropzone from "./Dropzone/Dropzone";
+import { Counter } from "../features/counter/Counter";
+import Dropzone from "react-dropzone";
 import "./App.scss";
 
 function App() {
   return (
     <div className="App">
       <Dropzone />
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
     </div>
   );
 }
