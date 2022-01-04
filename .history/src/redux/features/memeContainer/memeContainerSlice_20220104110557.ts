@@ -1,0 +1,77 @@
+
+//react
+import { createSlice } from "@reduxjs/toolkit";
+
+//third party
+import { v4 as uuidv4 } from "uuid";
+
+export interface Text {
+  id: string;
+  value: string;
+  color?: string;
+  position?: string;
+  font?: string;
+}
+
+export interface SingleMeme {
+  id: string;
+  image: string;
+  texts: Text[];
+}
+
+const initialState: {selectedMemeId:string,memesList: SingleMeme[]} = {selectedMemeId:'',memesList:[]};
+
+export const memeContainerSlice = createSlice({
+  name: "meme",
+  initialState,
+  reducers: {
+    addImageToMeme: (state, action) => {
+      //add image to meme;
+   
+      const foundIndex = findIndex(state.memesList, action);
+
+      //check if  meme already exists
+      if (foundIndex !== -1) {
+       state.memesList[foundIndex].image = action.payload.image;
+      } else {
+        state.memesList.push(action.payload);
+      }
+    },
+
+    addTextField: (state, action) => {
+      const foundIndex = findIndex(state.memesList, action);
+
+      if (foundIndex !== -1) {
+        const defaultText: Text = { id: uuidv4(), value: "" };
+        state.memesList[foundIndex].texts.push(defaultText);
+      }
+    },
+
+    updateTextField: (state, action) => {
+    
+      const selectedMeme =state.memesList[ state.memesList.findIndex(meme=>meme.id === state.selectedMemeId)];
+
+      const selectedTextIndex = selectedMeme.texts.findIndex(text => text.id===action.payload.textId);
+      
+      
+
+
+
+
+    },
+
+    setSelectedMeme:(state,action) => {
+      state.selectedMemeId = action.payload;
+    }
+    //-
+  },
+});
+
+function findIndex(state: SingleMeme[], action: { payload: SingleMeme }) {
+  const memeId: string = action.payload.id;
+  const foundIndex = state.findIndex((meme) => meme.id === memeId);
+  return foundIndex;
+}
+
+export const { addImageToMeme, addTextField } = memeContainerSlice.actions;
+export default memeContainerSlice.reducer;

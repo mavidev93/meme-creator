@@ -1,0 +1,17 @@
+import { createSlice } from "@reduxjs/toolkit";
+
+interface singleMeme{
+    string:{image:string,
+        texts:[]
+        }
+}
+
+const initialState =
+
+const memeContainerSlice = createSlice({
+    name: "meme",
+    initialState,
+    reducer:{
+        add
+    }
+})
