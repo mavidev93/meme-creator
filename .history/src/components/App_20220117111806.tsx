@@ -13,7 +13,7 @@ import "./App.scss";
 function App() {
   return (
     <div className="App p-2">
-      <div className="APP_container flex justify-between flex-row-reverse	">
+      <div className="APP_container flex justify-between">
         <div className="App_carousel_and_textPart_wrapper">
           <Dropzone />
           <ImageCarousel />

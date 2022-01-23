@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/app/hooks";
 import {
   setSelectedMeme,
   SingleMeme,
+  setMemeWrapperRect,
   updateTextField,
   updateTextPosition,
 } from "../../redux/features/memeContainer/memeContainerSlice";
@@ -79,20 +80,19 @@ function MemeContainer() {
 
   useEffect(() => {
     const canvas = canvasRef.current as HTMLCanvasElement;
-    console.log(selectedMeme);
     if (selectedMeme) LoadAndDrawImage(canvas, selectedMeme?.image);
-  }, [selectedMemeId]);
+  }, [selectedMeme]);
 
-  // useEffect(() => {
-  //   if (memeContainerRef.current) {
-  //     const DomRect = memeContainerRef.current.getBoundingClientRect();
-  //     dispatch(
-  //       setMemeWrapperRect({
-  //         rect: { top: DomRect.top, left: DomRect.left },
-  //       })
-  //     );
-  //   }
-  // }, [selectedMemeId]);
+  useEffect(() => {
+    if (memeContainerRef.current) {
+      const DomRect = memeContainerRef.current.getBoundingClientRect();
+      dispatch(
+        setMemeWrapperRect({
+          rect: { top: DomRect.top, left: DomRect.left },
+        })
+      );
+    }
+  }, [selectedMemeId]);
 
   return (
     <div>
@@ -142,30 +142,21 @@ function MemeContainer() {
 }
 
 function LoadAndDrawImage(canvas: HTMLCanvasElement, imgSrc: string) {
-  console.log("load and draw image run");
   const ctx = canvas.getContext("2d");
 
   let img: any = new Image();
   img.src = imgSrc;
   canvas.height = 500;
   canvas.width = 750;
-  img.onload = function () {
-    var w = img.width;
-    var h = img.height;
-    console.log("NEW IMAGE width", w);
-    console.log("NEW IMAGE height: ", h);
-
-    if (img.width > canvas.width) {
-      console.log("bigger");
-      const imgRatio = img.width / img.height;
-      img.width = 750;
-      img.height = img.width * (1 / imgRatio);
-      canvas.height = img.height;
-    }
-    img.style.maxWidth = "750px";
-    console.log("ctx:", ctx);
-    ctx?.drawImage(img, 0, 0, img.width, img.height);
-  };
+  if (img.width > canvas.width) {
+    console.log("bigger");
+    const imgRatio = img.width / img.height;
+    img.width = 750;
+    img.height = img.width * (1 / imgRatio);
+    canvas.height = img.height;
+  }
+  img.style.maxWidth = "750px";
+  ctx?.drawImage(img, 0, 0, img.width, img.height);
 }
 
 // function loadImage(url:string) {

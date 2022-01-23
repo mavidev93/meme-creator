@@ -155,17 +155,19 @@ function LoadAndDrawImage(canvas: HTMLCanvasElement, imgSrc: string) {
     console.log("NEW IMAGE width", w);
     console.log("NEW IMAGE height: ", h);
 
-    if (img.width > canvas.width) {
-      console.log("bigger");
-      const imgRatio = img.width / img.height;
-      img.width = 750;
-      img.height = img.width * (1 / imgRatio);
-      canvas.height = img.height;
-    }
-    img.style.maxWidth = "750px";
-    console.log("ctx:", ctx);
-    ctx?.drawImage(img, 0, 0, img.width, img.height);
+  if (img.width > canvas.width) {
+    console.log("bigger");
+    const imgRatio = img.width / img.height;
+    img.width = 750;
+    img.height = img.width * (1 / imgRatio);
+    canvas.height = img.height;
+  }
+  img.style.maxWidth = "750px";
+  console.log("ctx:", ctx);
+  ctx?.drawImage(img, 0, 0, w, h);
   };
+
+
 }
 
 // function loadImage(url:string) {

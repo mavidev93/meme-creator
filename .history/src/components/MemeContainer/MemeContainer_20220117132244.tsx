@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/app/hooks";
 import {
   setSelectedMeme,
   SingleMeme,
+  setMemeWrapperRect,
   updateTextField,
   updateTextPosition,
 } from "../../redux/features/memeContainer/memeContainerSlice";
@@ -37,9 +38,9 @@ function MemeContainer() {
 
   //refr
   const memeContainerRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   //handlers
+
 
   const onDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -77,22 +78,19 @@ function MemeContainer() {
     }
   }, []);
 
-  useEffect(() => {
-    const canvas = canvasRef.current as HTMLCanvasElement;
-    console.log(selectedMeme);
-    if (selectedMeme) LoadAndDrawImage(canvas, selectedMeme?.image);
-  }, [selectedMemeId]);
 
-  // useEffect(() => {
-  //   if (memeContainerRef.current) {
-  //     const DomRect = memeContainerRef.current.getBoundingClientRect();
-  //     dispatch(
-  //       setMemeWrapperRect({
-  //         rect: { top: DomRect.top, left: DomRect.left },
-  //       })
-  //     );
-  //   }
-  // }, [selectedMemeId]);
+  useEffect(() => {})
+
+  useEffect(() => {
+    if (memeContainerRef.current) {
+      const DomRect = memeContainerRef.current.getBoundingClientRect();
+      dispatch(
+        setMemeWrapperRect({
+          rect: { top: DomRect.top, left: DomRect.left },
+        })
+      );
+    }
+  }, [selectedMemeId]);
 
   return (
     <div>
@@ -100,14 +98,14 @@ function MemeContainer() {
         <div
           ref={memeContainerRef}
           style={{
-            // backgroundImage: `url(${selectedMeme?.image})`,
-            // height: "400px",
+            backgroundImage: `url(${selectedMeme?.image})`,
+            height: "400px",
             position: "relative",
           }}
           className="	bg-cover"
           id="memeContainer_currentMemeWrapper"
         >
-          <canvas id="canvas" ref={canvasRef} />
+          <canvas id="canvas"/>
           {selectedMeme?.texts.map((t) => (
             <p
               id={t.id}
@@ -137,43 +135,31 @@ function MemeContainer() {
         </div>
         {/* <img src={selectedMeme?.image} /> */}
       </div>
+  
     </div>
   );
 }
 
-function LoadAndDrawImage(canvas: HTMLCanvasElement, imgSrc: string) {
-  console.log("load and draw image run");
-  const ctx = canvas.getContext("2d");
-
-  let img: any = new Image();
-  img.src = imgSrc;
+async function LoadAndDrawImage(canvas:HT,imgSrc) {
+  let img = await loadImage(imgSrc);
   canvas.height = 500;
   canvas.width = 750;
-  img.onload = function () {
-    var w = img.width;
-    var h = img.height;
-    console.log("NEW IMAGE width", w);
-    console.log("NEW IMAGE height: ", h);
-
-    if (img.width > canvas.width) {
-      console.log("bigger");
-      const imgRatio = img.width / img.height;
-      img.width = 750;
-      img.height = img.width * (1 / imgRatio);
-      canvas.height = img.height;
-    }
-    img.style.maxWidth = "750px";
-    console.log("ctx:", ctx);
-    ctx?.drawImage(img, 0, 0, img.width, img.height);
-  };
+  if (img.width > canvas.width) {
+    console.log("bigger");
+    imgRatio = img.width / img.height;
+    img.width = 750;
+    img.height = img.width * (1 / imgRatio);
+    canvas.height = img.height;
+  }
+  img.style.maxWidth = "750px";
+  ctx.drawImage(img, 0, 0, img.width, img.height);
 }
 
-// function loadImage(url:string) {
-//   return new Promise((r) => {
-//     let i = new Image();
-//     i.onload = () => r(i);
-//     i.src = url;
-//   });
-// }
+function loadImage(url) {
+  return new Promise((r) => {
+    let i = new Image();
+    i.onload = () => r(i);
+    i.src = url;
+  });
 
 export default MemeContainer;

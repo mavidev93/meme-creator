@@ -136,6 +136,6 @@ export const {
   updateTextField,
   updateTextColor,
   updateTextPosition,
-
+  setMemeWrapperRect,
 } = memeContainerSlice.actions;
 export default memeContainerSlice.reducer;
